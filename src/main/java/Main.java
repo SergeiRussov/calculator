@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        /*BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
         System.out.println("Введите номер операции:");
         System.out.println("1.Сложить");
@@ -42,7 +42,9 @@ public class Main {
                 System.out.println("Такой комманды нет! Введите номер команды.");
         }
 
-        bufferedReader.close();
+        bufferedReader.close();*/
+
+        new App().start(args);
 
     }
 }
