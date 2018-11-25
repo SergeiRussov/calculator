@@ -1,24 +1,40 @@
-public class Calculations {
+import java.io.Serializable;
 
-    public static double toAdd(double x, double y) {
-        return x + y;
+public class Calculations implements Serializable {
+
+    private double x, y, answer;
+
+    public Calculations() {
+
     }
 
-    public static double toSubstract(double x, double y) {
-        return x - y;
+    public Calculations (double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public static double toMultiply(double x, double y) {
-        return x * y;
+    public double getX() {
+        return x;
     }
 
-    public static double toSplit(double x, double y) {
-        return x / y;
+    public void setX(double x) {
+        this.x = x;
     }
 
-    public static double calculatePercentage(double x, double y) {
-        return x / 100 * y;
+    public double getY() {
+        return y;
     }
 
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(double answer) {
+        this.answer = answer;
+    }
 
 }
