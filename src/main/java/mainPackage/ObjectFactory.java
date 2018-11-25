@@ -1,4 +1,4 @@
-package MainPackage;
+package mainPackage;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBElement;
@@ -12,7 +12,7 @@ public class ObjectFactory {
             XMLConstants.NULL_NS_URI, "data"
     );
 
-    @XmlElementDecl(name = "MainPackage.Calculations")
+    @XmlElementDecl(name = "mainPackage.Calculations")
     public JAXBElement <Calculations> createData (Calculations value){
         return new JAXBElement<Calculations>(
                 QNAME, Calculations.class, null, value

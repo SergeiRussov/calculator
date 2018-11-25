@@ -1,4 +1,4 @@
-package MainPackage;
+package mainPackage;
 
 public class CalculationsLogic {
 
@@ -21,5 +21,4 @@ public class CalculationsLogic {
     public double calculatePercentage(Calculations calc) {
         return calc.getX() / 100 * calc.getY();
     }
-
 }

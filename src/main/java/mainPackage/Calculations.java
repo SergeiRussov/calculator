@@ -1,11 +1,11 @@
-package MainPackage;
+package mainPackage;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(name = "MainPackage.Calculations")
+@XmlType(name = "mainPackage.Calculations")
 public class Calculations implements Serializable {
 
     @XmlElement

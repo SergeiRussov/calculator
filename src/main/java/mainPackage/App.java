@@ -1,4 +1,4 @@
-package MainPackage;
+package mainPackage;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class App extends Application {
@@ -160,7 +161,7 @@ public class App extends Application {
 
         buttonSaveXML.setOnAction(event -> {
             try {
-                new XMLMethods().toWriteObjectXML(add);
+                new SerializationMethods().toWriteObjectXML(add);
             } catch (JAXBException e) {
                 e.printStackTrace();
             }
@@ -168,7 +169,7 @@ public class App extends Application {
 
         buttonLoadXML.setOnAction(event -> {
             try {
-                Calculations newAdd = new XMLMethods().toReadObjectXML();
+                Calculations newAdd = new SerializationMethods().toReadObjectXML();
                 textFieldX.setText(newAdd.getX() + "");
                 textFieldY.setText(newAdd.getY() + "");
                 textAnswer.setText(newAdd.getAnswer() + "");
@@ -182,10 +183,38 @@ public class App extends Application {
         eighthLine.getChildren().addAll(buttonSaveXML, buttonLoadXML);
         /*-----------*/
 
-        root.getChildren().addAll(firstLine, secondLine, thirdLine, fourthLine, fifthLine, sixthLine, seventhLine,
-                eighthLine);
+        /*Ninth line*/
+        Button buttonSaveJson = new Button("Сохранить в JSON");
+        Button buttonLoadJson = new Button("Загрузить из JSON");
 
-        Scene scene = new Scene(root, 350, 250);
+        buttonSaveJson.setOnAction(event -> {
+            try {
+                new SerializationMethods().toWriteObjectJSON(add);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        buttonLoadJson.setOnAction(event -> {
+            try {
+                Calculations newAdd = new SerializationMethods().toReadObjectJSON();
+                textFieldX.setText(newAdd.getX() + "");
+                textFieldY.setText(newAdd.getY() + "");
+                textAnswer.setText(newAdd.getAnswer() + "");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        HBox ninthLine = new HBox(5);
+        ninthLine.setAlignment(Pos.CENTER);
+        ninthLine.getChildren().addAll(buttonSaveJson, buttonLoadJson);
+        /*----------*/
+
+        root.getChildren().addAll(firstLine, secondLine, thirdLine, fourthLine, fifthLine, sixthLine, seventhLine,
+                eighthLine, ninthLine);
+
+        Scene scene = new Scene(root, 350, 275);
 
         primaryStage.setTitle("Калькулятор");
         primaryStage.setScene(scene);
