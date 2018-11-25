@@ -1,7 +1,14 @@
+package MainPackage;
+
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlType(name = "MainPackage.Calculations")
 public class Calculations implements Serializable {
 
+    @XmlElement
     private double x, y, answer;
 
     public Calculations() {

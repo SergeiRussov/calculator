@@ -1,3 +1,5 @@
+package MainPackage;
+
 public class CalculationsLogic {
 
     public double toAdd(Calculations calc) {

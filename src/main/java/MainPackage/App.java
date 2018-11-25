@@ -1,3 +1,5 @@
+package MainPackage;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
 public class App extends Application {
@@ -122,8 +125,8 @@ public class App extends Application {
         /*----------*/
 
         /*Seventh line*/
-        Button buttonSave = new Button("Сохранить данные");
-        Button buttonLoad = new Button("Загрузить данные");
+        Button buttonSave = new Button("Сериализовать");
+        Button buttonLoad = new Button("Десериализовать");
 
         buttonSave.setOnAction(event -> {
             try {
@@ -151,7 +154,36 @@ public class App extends Application {
         seventhLine.getChildren().addAll(buttonSave, buttonLoad);
         /*------------*/
 
-        root.getChildren().addAll(firstLine, secondLine, thirdLine, fourthLine, fifthLine, sixthLine, seventhLine);
+        /*Eighth line*/
+        Button buttonSaveXML = new Button("Сохранить в XML");
+        Button buttonLoadXML = new Button("Загрузить из XML");
+
+        buttonSaveXML.setOnAction(event -> {
+            try {
+                new XMLMethods().toWriteObjectXML(add);
+            } catch (JAXBException e) {
+                e.printStackTrace();
+            }
+        });
+
+        buttonLoadXML.setOnAction(event -> {
+            try {
+                Calculations newAdd = new XMLMethods().toReadObjectXML();
+                textFieldX.setText(newAdd.getX() + "");
+                textFieldY.setText(newAdd.getY() + "");
+                textAnswer.setText(newAdd.getAnswer() + "");
+            } catch (JAXBException e) {
+                e.printStackTrace();
+            }
+        });
+
+        HBox eighthLine = new HBox(5);
+        eighthLine.setAlignment(Pos.CENTER);
+        eighthLine.getChildren().addAll(buttonSaveXML, buttonLoadXML);
+        /*-----------*/
+
+        root.getChildren().addAll(firstLine, secondLine, thirdLine, fourthLine, fifthLine, sixthLine, seventhLine,
+                eighthLine);
 
         Scene scene = new Scene(root, 350, 250);
 
