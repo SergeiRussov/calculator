@@ -10,9 +10,19 @@ public class Calculations implements Serializable {
 
     @XmlElement
     private double x, y, answer;
+    @XmlElement
+    private int oct, dec;
+    @XmlElement
+    private long bin;
+    @XmlElement
+    private String hex;
 
     public Calculations() {
 
+    }
+
+    public Calculations (double x) {
+        this.x = x;
     }
 
     public Calculations (double x, double y) {
@@ -34,6 +44,38 @@ public class Calculations implements Serializable {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    public long getBin() {
+        return bin;
+    }
+
+    public void setBin(long bin) {
+        this.bin = bin;
+    }
+
+    public int getOct() {
+        return oct;
+    }
+
+    public void setOct(int oct) {
+        this.oct = oct;
+    }
+
+    public int getDec() {
+        return dec;
+    }
+
+    public void setDec(int dec) {
+        this.dec = dec;
+    }
+
+    public String getHex() {
+        return hex;
+    }
+
+    public void setHex(String hex) {
+        this.hex = hex;
     }
 
     public double getAnswer() {

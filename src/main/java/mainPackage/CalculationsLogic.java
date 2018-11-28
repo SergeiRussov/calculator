@@ -21,4 +21,10 @@ public class CalculationsLogic {
     public double calculatePercentage(Calculations calc) {
         return calc.getX() / 100 * calc.getY();
     }
+
+    public void convertToOtherNumberSystem(Calculations calc) {
+        calc.setBin(Long.parseLong(Long.toBinaryString(calc.getDec())));
+        calc.setOct(Integer.parseInt(Integer.toOctalString(calc.getDec())));
+        calc.setHex(Integer.toHexString(calc.getDec()));
+    }
 }

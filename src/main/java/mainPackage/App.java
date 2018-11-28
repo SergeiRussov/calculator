@@ -1,16 +1,18 @@
 package mainPackage;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -20,13 +22,12 @@ public class App extends Application {
         Calculations add = new Calculations();
 
         VBox root = new VBox(5);
-        root.setAlignment(Pos.CENTER);
 
         /*First line*/
-        Label input = new Label("Введите числа x и y:");
+        Label input = new Label("Enter the numbers x and y:");
 
         HBox firstLine = new HBox(5);
-        firstLine.setAlignment(Pos.CENTER);
+        firstLine.setPadding(new Insets(0, 0, 0, 10));
         firstLine.getChildren().addAll(input);
         /*-------------*/
 
@@ -40,23 +41,26 @@ public class App extends Application {
         textFieldY.setPrefColumnCount(10);
 
         HBox secondLine = new HBox(5);
-        secondLine.setAlignment(Pos.CENTER);
+        secondLine.setPadding(new Insets(0, 0, 0, 10));
         secondLine.getChildren().addAll(labelX, textFieldX, labelY, textFieldY);
         /*-------------*/
 
         /*Third line*/
-        Label answer = new Label("Ответ");
+        Label answer = new Label("Answer");
         TextField textAnswer = new TextField();
         textAnswer.setPrefColumnCount(10);
 
         HBox thirdLine = new HBox(5);
-        thirdLine.setAlignment(Pos.CENTER);
+        thirdLine.setPadding(new Insets(0, 0, 0, 10));
         thirdLine.getChildren().addAll(answer ,textAnswer);
         /*-------------*/
 
         /*Fourth line*/
         Button buttonPositive = new Button("+");
         Button buttonNegative = new Button("-");
+        Button buttonMultiply = new Button("*");
+        Button buttonSplit = new Button("/");
+        Button buttonPercent = new Button("%");
 
         buttonPositive.setOnAction(event -> {
             double x = Double.parseDouble(textFieldX.getText());
@@ -76,15 +80,6 @@ public class App extends Application {
             textAnswer.setText(add.getAnswer() + "");
         });
 
-        HBox fourthLine = new HBox(5);
-        fourthLine.setAlignment(Pos.CENTER);
-        fourthLine.getChildren().addAll(buttonPositive, buttonNegative);
-        /*----------------*/
-
-        /*Fifth line*/
-        Button buttonMultiply = new Button("*");
-        Button buttonSplit = new Button("/");
-
         buttonMultiply.setOnAction(event -> {
             double x = Double.parseDouble(textFieldX.getText());
             double y = Double.parseDouble(textFieldY.getText());
@@ -103,14 +98,6 @@ public class App extends Application {
             textAnswer.setText(add.getAnswer() + "");
         });
 
-        HBox fifthLine = new HBox(5);
-        fifthLine.setAlignment(Pos.CENTER);
-        fifthLine.getChildren().addAll(buttonMultiply, buttonSplit);
-        /*------------*/
-
-        /*Sixth line*/
-        Button buttonPercent = new Button("%");
-
         buttonPercent.setOnAction(event -> {
             double x = Double.parseDouble(textFieldX.getText());
             double y = Double.parseDouble(textFieldY.getText());
@@ -120,16 +107,72 @@ public class App extends Application {
             textAnswer.setText(add.getAnswer() + "");
         });
 
-        HBox sixthLine = new HBox(5);
-        sixthLine.setAlignment(Pos.CENTER);
-        sixthLine.getChildren().addAll(buttonPercent);
+        HBox fourthLine = new HBox(5);
+        fourthLine.setPadding(new Insets(0, 0, 0, 10));
+        fourthLine.getChildren().addAll(buttonPositive, buttonNegative, buttonMultiply, buttonSplit,
+                buttonPercent);
+
+        /*Split line*/
+        Label splitlabel = new Label("----------------------------------------------------------" +
+                "-----------");
+
+        HBox split = new HBox(5);
+        split.setPadding(new Insets(0, 0, 0, 10));
+        split.getChildren().setAll(splitlabel);
         /*----------*/
 
-        /*Seventh line*/
-        Button buttonSave = new Button("Сериализовать");
-        Button buttonLoad = new Button("Десериализовать");
+        /*Fifth line*/
+        Label otherNumberSystem = new Label("Conversion of numbers to other number systems");
 
-        buttonSave.setOnAction(event -> {
+        HBox fifthLine = new HBox(5);
+        fifthLine.setPadding(new Insets(0, 0, 0, 10));
+        fifthLine.getChildren().addAll(otherNumberSystem);
+        /*----------*/
+
+        /*Sixth line*/
+        Label decNumber = new Label("Base number 10");
+        Label binNumber = new Label("Base number 2");
+        Label octNumber = new Label("Base number 8");
+        Label hexNumber = new Label("Base number 16");
+
+        TextField textDecNumber = new TextField();
+        TextField textBinNumber = new TextField();
+        TextField textOctNumber = new TextField();
+        TextField textHexNumber = new TextField();
+
+        Button btnConvert = new Button("Convert");
+        btnConvert.setOnAction(event -> {
+            int dec = Integer.parseInt(textDecNumber.getText());
+            add.setDec(dec);
+            new CalculationsLogic().convertToOtherNumberSystem(add);
+            textBinNumber.setText(add.getBin() + "");
+            textOctNumber.setText(add.getOct() + "");
+            textHexNumber.setText(add.getHex().toUpperCase());
+        });
+
+        VBox sixthLineColumnOne = new VBox(5);
+        sixthLineColumnOne.getChildren().addAll(decNumber, textDecNumber, btnConvert);
+
+        VBox sixthLineColumnTwo = new VBox(5);
+        sixthLineColumnTwo.getChildren().addAll(binNumber, textBinNumber, octNumber, textOctNumber, hexNumber,
+                textHexNumber);
+
+        HBox sixthLine = new HBox(5);
+        sixthLine.setPadding(new Insets(0, 0, 0, 10));
+        sixthLine.getChildren().addAll(sixthLineColumnOne, sixthLineColumnTwo);
+        /*------*/
+
+        /*Main menu*/
+        BorderPane topBorder = new BorderPane();
+        VBox topContainer = new VBox();
+        MenuBar mainMenu = new MenuBar();
+
+        Menu file = new Menu("File");
+
+        Menu saveFile = new Menu("Save file");
+
+        MenuItem saveFileSer = new MenuItem("To serialize");
+        saveFileSer.setOnAction(event -> {
             try {
                 new SerializationMethods().toWriteObject(add);
             } catch (IOException e) {
@@ -137,29 +180,8 @@ public class App extends Application {
             }
         });
 
-        buttonLoad.setOnAction(event -> {
-            try {
-                Calculations newAdd = new SerializationMethods().toReadObject();
-                textFieldX.setText(newAdd.getX() + "");
-                textFieldY.setText(newAdd.getY() + "");
-                textAnswer.setText(newAdd.getAnswer() + "");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-
-        HBox seventhLine = new HBox(5);
-        seventhLine.setAlignment(Pos.CENTER);
-        seventhLine.getChildren().addAll(buttonSave, buttonLoad);
-        /*------------*/
-
-        /*Eighth line*/
-        Button buttonSaveXML = new Button("Сохранить в XML");
-        Button buttonLoadXML = new Button("Загрузить из XML");
-
-        buttonSaveXML.setOnAction(event -> {
+        MenuItem saveFileXML = new MenuItem("Save to XML");
+        saveFileXML.setOnAction(event -> {
             try {
                 new SerializationMethods().toWriteObjectXML(add);
             } catch (JAXBException e) {
@@ -167,27 +189,8 @@ public class App extends Application {
             }
         });
 
-        buttonLoadXML.setOnAction(event -> {
-            try {
-                Calculations newAdd = new SerializationMethods().toReadObjectXML();
-                textFieldX.setText(newAdd.getX() + "");
-                textFieldY.setText(newAdd.getY() + "");
-                textAnswer.setText(newAdd.getAnswer() + "");
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
-        });
-
-        HBox eighthLine = new HBox(5);
-        eighthLine.setAlignment(Pos.CENTER);
-        eighthLine.getChildren().addAll(buttonSaveXML, buttonLoadXML);
-        /*-----------*/
-
-        /*Ninth line*/
-        Button buttonSaveJson = new Button("Сохранить в JSON");
-        Button buttonLoadJson = new Button("Загрузить из JSON");
-
-        buttonSaveJson.setOnAction(event -> {
+        MenuItem saveFileJSON = new MenuItem("Save to JSON");
+        saveFileJSON.setOnAction(event -> {
             try {
                 new SerializationMethods().toWriteObjectJSON(add);
             } catch (IOException e) {
@@ -195,28 +198,81 @@ public class App extends Application {
             }
         });
 
-        buttonLoadJson.setOnAction(event -> {
+        saveFile.getItems().addAll(saveFileSer, saveFileXML, saveFileJSON);
+
+        Menu downloadFile = new Menu("Download");
+
+        MenuItem downloadFileSer = new MenuItem("Deserialize");
+        downloadFileSer.setOnAction(event -> {
+            try {
+                Calculations newAdd = new SerializationMethods().toReadObject();
+                textFieldX.setText(newAdd.getX() + "");
+                textFieldY.setText(newAdd.getY() + "");
+                textAnswer.setText(newAdd.getAnswer() + "");
+                textBinNumber.setText(newAdd.getBin() + "");
+                textOctNumber.setText(newAdd.getOct() + "");
+                textDecNumber.setText(newAdd.getDec() + "");
+                textHexNumber.setText(newAdd.getHex().toUpperCase());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        MenuItem downloadFileXML = new MenuItem("Download from XML");
+        downloadFileXML.setOnAction(event -> {
+            try {
+                Calculations newAdd = new SerializationMethods().toReadObjectXML();
+                textFieldX.setText(newAdd.getX() + "");
+                textFieldY.setText(newAdd.getY() + "");
+                textAnswer.setText(newAdd.getAnswer() + "");
+                textBinNumber.setText(newAdd.getBin() + "");
+                textOctNumber.setText(newAdd.getOct() + "");
+                textDecNumber.setText(newAdd.getDec() + "");
+                textHexNumber.setText(newAdd.getHex().toUpperCase());
+            } catch (JAXBException e) {
+                e.printStackTrace();
+            }
+        });
+
+        MenuItem downloadFileJSON = new MenuItem("Download from JSON");
+        downloadFileJSON.setOnAction(event -> {
             try {
                 Calculations newAdd = new SerializationMethods().toReadObjectJSON();
                 textFieldX.setText(newAdd.getX() + "");
                 textFieldY.setText(newAdd.getY() + "");
                 textAnswer.setText(newAdd.getAnswer() + "");
+                textBinNumber.setText(newAdd.getBin() + "");
+                textOctNumber.setText(newAdd.getOct() + "");
+                textDecNumber.setText(newAdd.getDec() + "");
+                textHexNumber.setText(newAdd.getHex().toUpperCase());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
 
-        HBox ninthLine = new HBox(5);
-        ninthLine.setAlignment(Pos.CENTER);
-        ninthLine.getChildren().addAll(buttonSaveJson, buttonLoadJson);
-        /*----------*/
+        downloadFile.getItems().addAll(downloadFileSer, downloadFileXML, downloadFileJSON);
 
-        root.getChildren().addAll(firstLine, secondLine, thirdLine, fourthLine, fifthLine, sixthLine, seventhLine,
-                eighthLine, ninthLine);
+        MenuItem exit = new MenuItem("Exit");
+        exit.setOnAction(event -> {
+            Platform.exit();
+        });
 
-        Scene scene = new Scene(root, 350, 275);
+        file.getItems().addAll(saveFile, downloadFile, exit);
 
-        primaryStage.setTitle("Калькулятор");
+        mainMenu.getMenus().addAll(file);
+        topContainer.getChildren().add(mainMenu);
+
+        topBorder.setTop(topContainer);
+        /*---------*/
+
+        root.getChildren().addAll(topBorder, firstLine, secondLine, thirdLine, fourthLine,
+                split, fifthLine, sixthLine);
+
+        Scene scene = new Scene(root,  350, 350);
+
+        primaryStage.setTitle("Calculator");
         primaryStage.setScene(scene);
         primaryStage.show();
 
