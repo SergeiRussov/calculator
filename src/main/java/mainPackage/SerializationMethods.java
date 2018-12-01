@@ -54,7 +54,7 @@ public class SerializationMethods {
 
     public void toWriteObjectJSON(Calculations calc, File file) throws IOException {
         try (Writer writer = new FileWriter(file)) {
-            Gson gson = new GsonBuilder().create();
+            Gson gson = new Gson();
 
             gson.toJson(calc, writer);
             writer.flush();
