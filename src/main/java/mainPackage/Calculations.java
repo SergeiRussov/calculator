@@ -2,6 +2,7 @@ package mainPackage;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
@@ -15,7 +16,7 @@ public class Calculations implements Serializable {
     @XmlElement
     private long bin;
     @XmlElement
-    private String hex;
+    private String hex, operation;
 
     public Calculations() {
 
@@ -86,4 +87,11 @@ public class Calculations implements Serializable {
         this.answer = answer;
     }
 
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
 }

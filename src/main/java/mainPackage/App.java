@@ -3,21 +3,29 @@ package mainPackage;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.soap.Text;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 
 public class App extends Application {
+
     public void start(Stage primaryStage) throws Exception {
+
+        final FileChooser fileChooserLoad = new FileChooser();
+        fileChooserLoad.setTitle("Open file");
+        fileChooserLoad.setInitialDirectory(new File(System.getProperty("user.dir")));
+
+        final FileChooser fileChooserSave = new FileChooser();
+        fileChooserSave.setTitle("Save file");
+        fileChooserSave.setInitialDirectory(new File(System.getProperty("user.dir")));
 
         Calculations add = new Calculations();
 
@@ -65,46 +73,56 @@ public class App extends Application {
         buttonPositive.setOnAction(event -> {
             double x = Double.parseDouble(textFieldX.getText());
             double y = Double.parseDouble(textFieldY.getText());
+            add.setOperation("addition");
             add.setX(x);
             add.setY(y);
             add.setAnswer(new CalculationsLogic().toAdd(add));
             textAnswer.setText(add.getAnswer() + "");
+            LogsLogic.addArithmeticLogs(add);
         });
 
         buttonNegative.setOnAction(event -> {
             double x = Double.parseDouble(textFieldX.getText());
             double y = Double.parseDouble(textFieldY.getText());
+            add.setOperation("subtraction");
             add.setX(x);
             add.setY(y);
             add.setAnswer(new CalculationsLogic().toSubstract(add));
             textAnswer.setText(add.getAnswer() + "");
+            LogsLogic.addArithmeticLogs(add);
         });
 
         buttonMultiply.setOnAction(event -> {
             double x = Double.parseDouble(textFieldX.getText());
             double y = Double.parseDouble(textFieldY.getText());
+            add.setOperation("multiplication");
             add.setX(x);
             add.setY(y);
             add.setAnswer(new CalculationsLogic().toMultiply(add));
             textAnswer.setText(add.getAnswer() + "");
+            LogsLogic.addArithmeticLogs(add);
         });
 
         buttonSplit.setOnAction(event -> {
             double x = Double.parseDouble(textFieldX.getText());
             double y = Double.parseDouble(textFieldY.getText());
+            add.setOperation("division");
             add.setX(x);
             add.setY(y);
             add.setAnswer(new CalculationsLogic().toSplit(add));
             textAnswer.setText(add.getAnswer() + "");
+            LogsLogic.addArithmeticLogs(add);
         });
 
         buttonPercent.setOnAction(event -> {
             double x = Double.parseDouble(textFieldX.getText());
             double y = Double.parseDouble(textFieldY.getText());
+            add.setOperation("percent calculation");
             add.setX(x);
             add.setY(y);
             add.setAnswer(new CalculationsLogic().calculatePercentage(add));
             textAnswer.setText(add.getAnswer() + "");
+            LogsLogic.addArithmeticLogs(add);
         });
 
         HBox fourthLine = new HBox(5);
@@ -144,10 +162,12 @@ public class App extends Application {
         btnConvert.setOnAction(event -> {
             int dec = Integer.parseInt(textDecNumber.getText());
             add.setDec(dec);
+            add.setOperation("convert");
             new CalculationsLogic().convertToOtherNumberSystem(add);
             textBinNumber.setText(add.getBin() + "");
             textOctNumber.setText(add.getOct() + "");
             textHexNumber.setText(add.getHex().toUpperCase());
+            LogsLogic.addNumberSystemLogs(add);
         });
 
         VBox sixthLineColumnOne = new VBox(5);
@@ -174,7 +194,15 @@ public class App extends Application {
         MenuItem saveFileSer = new MenuItem("To serialize");
         saveFileSer.setOnAction(event -> {
             try {
-                new SerializationMethods().toWriteObject(add);
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                        "BIN files (*.bin)","*.bin");
+                fileChooserSave.getExtensionFilters().clear();
+                fileChooserSave.getExtensionFilters().add(extFilter);
+                File saveFileDir = fileChooserSave.showSaveDialog(primaryStage);
+
+                add.setOperation("serialization");
+                new SerializationMethods().toWriteObject(add, saveFileDir);
+                LogsLogic.addSaveLogs(add);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -183,7 +211,15 @@ public class App extends Application {
         MenuItem saveFileXML = new MenuItem("Save to XML");
         saveFileXML.setOnAction(event -> {
             try {
-                new SerializationMethods().toWriteObjectXML(add);
+                FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter(
+                        "XML files (*.xml)","*.xml");
+                fileChooserSave.getExtensionFilters().clear();
+                fileChooserSave.getExtensionFilters().add(extFilterXML);
+                File saveFileDir = fileChooserSave.showSaveDialog(primaryStage);
+
+                add.setOperation("XML");
+                new SerializationMethods().toWriteObjectXML(add, saveFileDir);
+                LogsLogic.addSaveLogs(add);
             } catch (JAXBException e) {
                 e.printStackTrace();
             }
@@ -192,7 +228,15 @@ public class App extends Application {
         MenuItem saveFileJSON = new MenuItem("Save to JSON");
         saveFileJSON.setOnAction(event -> {
             try {
-                new SerializationMethods().toWriteObjectJSON(add);
+                FileChooser.ExtensionFilter extFilterJSON = new FileChooser.ExtensionFilter(
+                        "JSON files (*.json)","*.json");
+                fileChooserSave.getExtensionFilters().clear();
+                fileChooserSave.getExtensionFilters().add(extFilterJSON);
+                File saveFileDir = fileChooserSave.showSaveDialog(primaryStage);
+
+                add.setOperation("JSON");
+                new SerializationMethods().toWriteObjectJSON(add, saveFileDir);
+                LogsLogic.addSaveLogs(add);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -205,14 +249,22 @@ public class App extends Application {
         MenuItem downloadFileSer = new MenuItem("Deserialize");
         downloadFileSer.setOnAction(event -> {
             try {
-                Calculations newAdd = new SerializationMethods().toReadObject();
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                        "BIN files (*.bin)","*.bin");
+                fileChooserLoad.getExtensionFilters().clear();
+                fileChooserLoad.getExtensionFilters().add(extFilter);
+                File loadFile = fileChooserLoad.showOpenDialog(primaryStage);
+                Calculations newAdd = new SerializationMethods().toReadObject(loadFile);
+
+                newAdd.setOperation("serialization");
                 textFieldX.setText(newAdd.getX() + "");
                 textFieldY.setText(newAdd.getY() + "");
                 textAnswer.setText(newAdd.getAnswer() + "");
                 textBinNumber.setText(newAdd.getBin() + "");
                 textOctNumber.setText(newAdd.getOct() + "");
                 textDecNumber.setText(newAdd.getDec() + "");
-                textHexNumber.setText(newAdd.getHex().toUpperCase());
+                textHexNumber.setText(newAdd.getHex());
+                LogsLogic.addDownloadLogs(newAdd);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -223,14 +275,22 @@ public class App extends Application {
         MenuItem downloadFileXML = new MenuItem("Download from XML");
         downloadFileXML.setOnAction(event -> {
             try {
-                Calculations newAdd = new SerializationMethods().toReadObjectXML();
+                FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter(
+                        "XML files (*.xml)","*.xml");
+                fileChooserLoad.getExtensionFilters().clear();
+                fileChooserLoad.getExtensionFilters().add(extFilterXML);
+                File loadFile = fileChooserLoad.showOpenDialog(primaryStage);
+                Calculations newAdd = new SerializationMethods().toReadObjectXML(loadFile);
+
+                newAdd.setOperation("XML");
                 textFieldX.setText(newAdd.getX() + "");
                 textFieldY.setText(newAdd.getY() + "");
                 textAnswer.setText(newAdd.getAnswer() + "");
                 textBinNumber.setText(newAdd.getBin() + "");
                 textOctNumber.setText(newAdd.getOct() + "");
                 textDecNumber.setText(newAdd.getDec() + "");
-                textHexNumber.setText(newAdd.getHex().toUpperCase());
+                textHexNumber.setText(newAdd.getHex());
+                LogsLogic.addDownloadLogs(newAdd);
             } catch (JAXBException e) {
                 e.printStackTrace();
             }
@@ -239,14 +299,22 @@ public class App extends Application {
         MenuItem downloadFileJSON = new MenuItem("Download from JSON");
         downloadFileJSON.setOnAction(event -> {
             try {
-                Calculations newAdd = new SerializationMethods().toReadObjectJSON();
+                FileChooser.ExtensionFilter extFilterJSON = new FileChooser.ExtensionFilter(
+                        "JSON files (*.json)","*.json");
+                fileChooserLoad.getExtensionFilters().clear();
+                fileChooserLoad.getExtensionFilters().add(extFilterJSON);
+                File loadFile = fileChooserLoad.showOpenDialog(primaryStage);
+                Calculations newAdd = new SerializationMethods().toReadObjectJSON(loadFile);
+
+                newAdd.setOperation("JSON");
                 textFieldX.setText(newAdd.getX() + "");
                 textFieldY.setText(newAdd.getY() + "");
                 textAnswer.setText(newAdd.getAnswer() + "");
                 textBinNumber.setText(newAdd.getBin() + "");
                 textOctNumber.setText(newAdd.getOct() + "");
                 textDecNumber.setText(newAdd.getDec() + "");
-                textHexNumber.setText(newAdd.getHex().toUpperCase());
+                textHexNumber.setText(newAdd.getHex());
+                LogsLogic.addDownloadLogs(newAdd);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -261,7 +329,13 @@ public class App extends Application {
 
         file.getItems().addAll(saveFile, downloadFile, exit);
 
-        mainMenu.getMenus().addAll(file);
+        Menu service = new Menu("Service");
+
+        MenuItem showLogs = new MenuItem("Show logs");
+        showLogs.setOnAction(event -> LogsLogic.showLogs());
+        service.getItems().addAll(showLogs);
+
+        mainMenu.getMenus().addAll(file, service);
         topContainer.getChildren().add(mainMenu);
 
         topBorder.setTop(topContainer);
@@ -275,7 +349,6 @@ public class App extends Application {
         primaryStage.setTitle("Calculator");
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 
     public void start(String[] args) {

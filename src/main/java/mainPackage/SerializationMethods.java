@@ -9,9 +9,8 @@ import javax.xml.bind.*;
 public class SerializationMethods {
 
     /*Java Serialization*/
-    File file = new File("saves.bin");
 
-    public void toWriteObject(Calculations calc) throws IOException {
+    public void toWriteObject(Calculations calc, File file) throws IOException {
         FileOutputStream fo = new FileOutputStream(file);
         ObjectOutputStream so = new ObjectOutputStream(fo);
 
@@ -20,7 +19,7 @@ public class SerializationMethods {
         so.close();
     }
 
-    public Calculations toReadObject() throws IOException, ClassNotFoundException {
+    public Calculations toReadObject(File file) throws IOException, ClassNotFoundException {
         FileInputStream fi = new FileInputStream(file);
         ObjectInputStream si = new ObjectInputStream(fi);
         Calculations calc = (Calculations) si.readObject();
@@ -30,32 +29,31 @@ public class SerializationMethods {
 
     /*Serialization with XML*/
     String PACKAGE = Calculations.class.getPackage().getName();
-    File fileXML = new File("saves.xml");
 
-    public void toWriteObjectXML(Calculations calc) throws JAXBException{
+    public void toWriteObjectXML(Calculations calc, File file) throws JAXBException{
 
         JAXBContext jc = JAXBContext.newInstance(PACKAGE);
 
         Marshaller m = jc.createMarshaller();
-        m.marshal(calc, fileXML);
+        m.marshal(calc, file);
 
     }
 
-    public Calculations toReadObjectXML() throws JAXBException {
+    public Calculations toReadObjectXML(File file) throws JAXBException {
 
         JAXBContext jc = JAXBContext.newInstance(PACKAGE);
 
         Unmarshaller um = jc.createUnmarshaller();
 
-        Calculations newCalc = (Calculations) um.unmarshal(fileXML);
+        Calculations newCalc = (Calculations) um.unmarshal(file);
 
         return newCalc;
     }
 
     /*Serialization with JSON*/
 
-    public void toWriteObjectJSON(Calculations calc) throws IOException {
-        try (Writer writer = new FileWriter("saves.json")) {
+    public void toWriteObjectJSON(Calculations calc, File file) throws IOException {
+        try (Writer writer = new FileWriter(file)) {
             Gson gson = new GsonBuilder().create();
 
             gson.toJson(calc, writer);
@@ -63,8 +61,8 @@ public class SerializationMethods {
         }
     }
 
-    public Calculations toReadObjectJSON() throws IOException {
-        try (Reader reader = new FileReader("saves.json")) {
+    public Calculations toReadObjectJSON(File file) throws IOException {
+        try (Reader reader = new FileReader(file)) {
             Gson gson = new Gson();
 
             Calculations newCalc = gson.fromJson(reader, Calculations.class);
