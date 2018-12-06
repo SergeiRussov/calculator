@@ -332,7 +332,7 @@ public class App extends Application {
         Menu service = new Menu("Service");
 
         MenuItem showLogs = new MenuItem("Show logs");
-        showLogs.setOnAction(event -> LogsLogic.showLogs());
+        showLogs.setOnAction(event -> showLogs());
         service.getItems().addAll(showLogs);
 
         mainMenu.getMenus().addAll(file, service);
@@ -353,5 +353,20 @@ public class App extends Application {
 
     public void start(String[] args) {
         launch(args);
+    }
+
+    public void showLogs() {
+        Stage stageLogs = new Stage();
+
+        TextArea areaLogs = new TextArea();
+        areaLogs.setText(LogsLogic.showLogs());
+
+        VBox vboxLogs = new VBox();
+        vboxLogs.getChildren().addAll(areaLogs);
+
+        Scene showLogs = new Scene(vboxLogs, 550, 350);
+        stageLogs.setTitle("logs");
+        stageLogs.setScene(showLogs);
+        stageLogs.show();
     }
 }

@@ -22,9 +22,13 @@ public class LogsLogic {
         Logs.logs.add("[" + new Date() + "]" + " Download " + calc.getOperation() + " file");
     }
 
-    public static void showLogs() {
+    public static String showLogs() {
+        String logs = "";
+
         for (int i = 0; i < Logs.logs.size(); i++) {
-            System.out.println(Logs.logs.get(i));
+                logs = logs + Logs.logs.get(i) + "\n";
         }
+
+        return logs;
     }
 }
