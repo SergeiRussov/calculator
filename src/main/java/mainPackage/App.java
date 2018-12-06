@@ -359,7 +359,9 @@ public class App extends Application {
         Stage stageLogs = new Stage();
 
         TextArea areaLogs = new TextArea();
+        areaLogs.setPrefSize(550, 350);
         areaLogs.setText(LogsLogic.showLogs());
+        areaLogs.setEditable(false);
 
         VBox vboxLogs = new VBox();
         vboxLogs.getChildren().addAll(areaLogs);
