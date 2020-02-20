@@ -1,16 +1,19 @@
-package mainPackage;
+package mainPackage.service;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import mainPackage.entity.CalculationEntity;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
-import javax.xml.bind.*;
 
-public class SerializationMethods {
+public class SerializationService {
 
     /*Java Serialization*/
 
-    public void toWriteObject(Calculations calc, File file) throws IOException {
+    public void toWriteObject(CalculationEntity calc, File file) throws IOException {
         FileOutputStream fo = new FileOutputStream(file);
         ObjectOutputStream so = new ObjectOutputStream(fo);
 
@@ -19,18 +22,18 @@ public class SerializationMethods {
         so.close();
     }
 
-    public Calculations toReadObject(File file) throws IOException, ClassNotFoundException {
+    public CalculationEntity toReadObject(File file) throws IOException, ClassNotFoundException {
         FileInputStream fi = new FileInputStream(file);
         ObjectInputStream si = new ObjectInputStream(fi);
-        Calculations calc = (Calculations) si.readObject();
+        CalculationEntity calc = (CalculationEntity) si.readObject();
         si.close();
         return calc;
     }
 
     /*Serialization with XML*/
-    String PACKAGE = Calculations.class.getPackage().getName();
+    String PACKAGE = CalculationEntity.class.getPackage().getName();
 
-    public void toWriteObjectXML(Calculations calc, File file) throws JAXBException{
+    public void toWriteObjectXML(CalculationEntity calc, File file) throws JAXBException {
 
         JAXBContext jc = JAXBContext.newInstance(PACKAGE);
 
@@ -39,20 +42,20 @@ public class SerializationMethods {
 
     }
 
-    public Calculations toReadObjectXML(File file) throws JAXBException {
+    public CalculationEntity toReadObjectXML(File file) throws JAXBException {
 
         JAXBContext jc = JAXBContext.newInstance(PACKAGE);
 
         Unmarshaller um = jc.createUnmarshaller();
 
-        Calculations newCalc = (Calculations) um.unmarshal(file);
+        CalculationEntity newCalc = (CalculationEntity) um.unmarshal(file);
 
         return newCalc;
     }
 
     /*Serialization with JSON*/
 
-    public void toWriteObjectJSON(Calculations calc, File file) throws IOException {
+    public void toWriteObjectJSON(CalculationEntity calc, File file) throws IOException {
         try (Writer writer = new FileWriter(file)) {
             Gson gson = new Gson();
 
@@ -61,11 +64,11 @@ public class SerializationMethods {
         }
     }
 
-    public Calculations toReadObjectJSON(File file) throws IOException {
+    public CalculationEntity toReadObjectJSON(File file) throws IOException {
         try (Reader reader = new FileReader(file)) {
             Gson gson = new Gson();
 
-            Calculations newCalc = gson.fromJson(reader, Calculations.class);
+            CalculationEntity newCalc = gson.fromJson(reader, CalculationEntity.class);
             return newCalc;
         }
     }

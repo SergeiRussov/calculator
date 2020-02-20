@@ -1,4 +1,4 @@
-package mainPackage;
+package mainPackage.model;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,12 +10,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import mainPackage.service.LogService;
+import mainPackage.entity.CalculationEntity;
+import mainPackage.service.CalculationService;
+import mainPackage.service.SerializationService;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 
-public class App extends Application {
+public class FXModel extends Application {
 
     public void start(Stage primaryStage) throws Exception {
 
@@ -27,7 +31,7 @@ public class App extends Application {
         fileChooserSave.setTitle("Save file");
         fileChooserSave.setInitialDirectory(new File(System.getProperty("user.dir")));
 
-        Calculations add = new Calculations();
+        CalculationEntity add = new CalculationEntity();
 
         VBox root = new VBox(5);
 
@@ -60,7 +64,7 @@ public class App extends Application {
 
         HBox thirdLine = new HBox(5);
         thirdLine.setPadding(new Insets(0, 0, 0, 10));
-        thirdLine.getChildren().addAll(answer ,textAnswer);
+        thirdLine.getChildren().addAll(answer, textAnswer);
         /*-------------*/
 
         /*Fourth line*/
@@ -76,9 +80,9 @@ public class App extends Application {
             add.setOperation("addition");
             add.setX(x);
             add.setY(y);
-            add.setAnswer(new CalculationsLogic().toAdd(add));
+            add.setAnswer(new CalculationService().toAdd(add));
             textAnswer.setText(add.getAnswer() + "");
-            LogsLogic.addArithmeticLogs(add);
+            LogService.addArithmeticLogs(add);
         });
 
         buttonNegative.setOnAction(event -> {
@@ -87,9 +91,9 @@ public class App extends Application {
             add.setOperation("subtraction");
             add.setX(x);
             add.setY(y);
-            add.setAnswer(new CalculationsLogic().toSubstract(add));
+            add.setAnswer(new CalculationService().toSubstract(add));
             textAnswer.setText(add.getAnswer() + "");
-            LogsLogic.addArithmeticLogs(add);
+            LogService.addArithmeticLogs(add);
         });
 
         buttonMultiply.setOnAction(event -> {
@@ -98,9 +102,9 @@ public class App extends Application {
             add.setOperation("multiplication");
             add.setX(x);
             add.setY(y);
-            add.setAnswer(new CalculationsLogic().toMultiply(add));
+            add.setAnswer(new CalculationService().toMultiply(add));
             textAnswer.setText(add.getAnswer() + "");
-            LogsLogic.addArithmeticLogs(add);
+            LogService.addArithmeticLogs(add);
         });
 
         buttonSplit.setOnAction(event -> {
@@ -109,9 +113,9 @@ public class App extends Application {
             add.setOperation("division");
             add.setX(x);
             add.setY(y);
-            add.setAnswer(new CalculationsLogic().toSplit(add));
+            add.setAnswer(new CalculationService().toSplit(add));
             textAnswer.setText(add.getAnswer() + "");
-            LogsLogic.addArithmeticLogs(add);
+            LogService.addArithmeticLogs(add);
         });
 
         buttonPercent.setOnAction(event -> {
@@ -120,9 +124,9 @@ public class App extends Application {
             add.setOperation("percent calculation");
             add.setX(x);
             add.setY(y);
-            add.setAnswer(new CalculationsLogic().calculatePercentage(add));
+            add.setAnswer(new CalculationService().calculatePercentage(add));
             textAnswer.setText(add.getAnswer() + "");
-            LogsLogic.addArithmeticLogs(add);
+            LogService.addArithmeticLogs(add);
         });
 
         HBox fourthLine = new HBox(5);
@@ -163,11 +167,11 @@ public class App extends Application {
             int dec = Integer.parseInt(textDecNumber.getText());
             add.setDec(dec);
             add.setOperation("convert");
-            new CalculationsLogic().convertToOtherNumberSystem(add);
+            new CalculationService().convertToOtherNumberSystem(add);
             textBinNumber.setText(add.getBin() + "");
             textOctNumber.setText(add.getOct() + "");
             textHexNumber.setText(add.getHex().toUpperCase());
-            LogsLogic.addNumberSystemLogs(add);
+            LogService.addNumberSystemLogs(add);
         });
 
         VBox sixthLineColumnOne = new VBox(5);
@@ -195,14 +199,14 @@ public class App extends Application {
         saveFileSer.setOnAction(event -> {
             try {
                 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-                        "BIN files (*.bin)","*.bin");
+                        "BIN files (*.bin)", "*.bin");
                 fileChooserSave.getExtensionFilters().clear();
                 fileChooserSave.getExtensionFilters().add(extFilter);
                 File saveFileDir = fileChooserSave.showSaveDialog(primaryStage);
 
                 add.setOperation("serialization");
-                new SerializationMethods().toWriteObject(add, saveFileDir);
-                LogsLogic.addSaveLogs(add);
+                new SerializationService().toWriteObject(add, saveFileDir);
+                LogService.addSaveLogs(add);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -212,14 +216,14 @@ public class App extends Application {
         saveFileXML.setOnAction(event -> {
             try {
                 FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter(
-                        "XML files (*.xml)","*.xml");
+                        "XML files (*.xml)", "*.xml");
                 fileChooserSave.getExtensionFilters().clear();
                 fileChooserSave.getExtensionFilters().add(extFilterXML);
                 File saveFileDir = fileChooserSave.showSaveDialog(primaryStage);
 
                 add.setOperation("XML");
-                new SerializationMethods().toWriteObjectXML(add, saveFileDir);
-                LogsLogic.addSaveLogs(add);
+                new SerializationService().toWriteObjectXML(add, saveFileDir);
+                LogService.addSaveLogs(add);
             } catch (JAXBException e) {
                 e.printStackTrace();
             }
@@ -229,14 +233,14 @@ public class App extends Application {
         saveFileJSON.setOnAction(event -> {
             try {
                 FileChooser.ExtensionFilter extFilterJSON = new FileChooser.ExtensionFilter(
-                        "JSON files (*.json)","*.json");
+                        "JSON files (*.json)", "*.json");
                 fileChooserSave.getExtensionFilters().clear();
                 fileChooserSave.getExtensionFilters().add(extFilterJSON);
                 File saveFileDir = fileChooserSave.showSaveDialog(primaryStage);
 
                 add.setOperation("JSON");
-                new SerializationMethods().toWriteObjectJSON(add, saveFileDir);
-                LogsLogic.addSaveLogs(add);
+                new SerializationService().toWriteObjectJSON(add, saveFileDir);
+                LogService.addSaveLogs(add);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -250,11 +254,11 @@ public class App extends Application {
         downloadFileSer.setOnAction(event -> {
             try {
                 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-                        "BIN files (*.bin)","*.bin");
+                        "BIN files (*.bin)", "*.bin");
                 fileChooserLoad.getExtensionFilters().clear();
                 fileChooserLoad.getExtensionFilters().add(extFilter);
                 File loadFile = fileChooserLoad.showOpenDialog(primaryStage);
-                Calculations newAdd = new SerializationMethods().toReadObject(loadFile);
+                CalculationEntity newAdd = new SerializationService().toReadObject(loadFile);
 
                 newAdd.setOperation("serialization");
                 textFieldX.setText(newAdd.getX() + "");
@@ -264,7 +268,7 @@ public class App extends Application {
                 textOctNumber.setText(newAdd.getOct() + "");
                 textDecNumber.setText(newAdd.getDec() + "");
                 textHexNumber.setText(newAdd.getHex());
-                LogsLogic.addDownloadLogs(newAdd);
+                LogService.addDownloadLogs(newAdd);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -276,11 +280,11 @@ public class App extends Application {
         downloadFileXML.setOnAction(event -> {
             try {
                 FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter(
-                        "XML files (*.xml)","*.xml");
+                        "XML files (*.xml)", "*.xml");
                 fileChooserLoad.getExtensionFilters().clear();
                 fileChooserLoad.getExtensionFilters().add(extFilterXML);
                 File loadFile = fileChooserLoad.showOpenDialog(primaryStage);
-                Calculations newAdd = new SerializationMethods().toReadObjectXML(loadFile);
+                CalculationEntity newAdd = new SerializationService().toReadObjectXML(loadFile);
 
                 newAdd.setOperation("XML");
                 textFieldX.setText(newAdd.getX() + "");
@@ -290,7 +294,7 @@ public class App extends Application {
                 textOctNumber.setText(newAdd.getOct() + "");
                 textDecNumber.setText(newAdd.getDec() + "");
                 textHexNumber.setText(newAdd.getHex());
-                LogsLogic.addDownloadLogs(newAdd);
+                LogService.addDownloadLogs(newAdd);
             } catch (JAXBException e) {
                 e.printStackTrace();
             }
@@ -300,11 +304,11 @@ public class App extends Application {
         downloadFileJSON.setOnAction(event -> {
             try {
                 FileChooser.ExtensionFilter extFilterJSON = new FileChooser.ExtensionFilter(
-                        "JSON files (*.json)","*.json");
+                        "JSON files (*.json)", "*.json");
                 fileChooserLoad.getExtensionFilters().clear();
                 fileChooserLoad.getExtensionFilters().add(extFilterJSON);
                 File loadFile = fileChooserLoad.showOpenDialog(primaryStage);
-                Calculations newAdd = new SerializationMethods().toReadObjectJSON(loadFile);
+                CalculationEntity newAdd = new SerializationService().toReadObjectJSON(loadFile);
 
                 newAdd.setOperation("JSON");
                 textFieldX.setText(newAdd.getX() + "");
@@ -314,7 +318,7 @@ public class App extends Application {
                 textOctNumber.setText(newAdd.getOct() + "");
                 textDecNumber.setText(newAdd.getDec() + "");
                 textHexNumber.setText(newAdd.getHex());
-                LogsLogic.addDownloadLogs(newAdd);
+                LogService.addDownloadLogs(newAdd);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -344,7 +348,7 @@ public class App extends Application {
         root.getChildren().addAll(topBorder, firstLine, secondLine, thirdLine, fourthLine,
                 split, fifthLine, sixthLine);
 
-        Scene scene = new Scene(root,  350, 350);
+        Scene scene = new Scene(root, 350, 350);
 
         primaryStage.setTitle("Calculator");
         primaryStage.setScene(scene);
@@ -360,7 +364,7 @@ public class App extends Application {
 
         TextArea areaLogs = new TextArea();
         areaLogs.setPrefSize(550, 350);
-        areaLogs.setText(LogsLogic.showLogs());
+        areaLogs.setText(LogService.showLogs());
         areaLogs.setEditable(false);
 
         VBox vboxLogs = new VBox();

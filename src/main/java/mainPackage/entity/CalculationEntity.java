@@ -1,13 +1,12 @@
-package mainPackage;
+package mainPackage.entity;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "mainPackage.Calculations")
-public class Calculations implements Serializable {
+public class CalculationEntity implements Serializable {
 
     @XmlElement
     private double x, y, answer;
@@ -18,15 +17,15 @@ public class Calculations implements Serializable {
     @XmlElement
     private String hex, operation;
 
-    public Calculations() {
+    public CalculationEntity() {
 
     }
 
-    public Calculations (double x) {
+    public CalculationEntity(double x) {
         this.x = x;
     }
 
-    public Calculations (double x, double y) {
+    public CalculationEntity(double x, double y) {
         this.x = x;
         this.y = y;
     }
